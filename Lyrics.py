@@ -42,6 +42,8 @@ def add_spaces(string):
 Artist = input("Artist : ")
 Song = input("Song : ")
 
-print(findLyrics(Artist,Song))
+Lyrics = findLyrics(Artist,Song)
 
 f = open("ExportedLyrics/"+Song+".txt",'w')
+
+f.write(Lyrics)
