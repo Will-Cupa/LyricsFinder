@@ -44,4 +44,4 @@ Song = input("Song : ")
 
 print(findLyrics(Artist,Song))
 
-f = open(Song+".txt", 'w')
+f = open("ExportedLyrics/"+Song+".txt",'w')
