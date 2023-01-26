@@ -43,3 +43,5 @@ Artist = input("Artist : ")
 Song = input("Song : ")
 
 print(findLyrics(Artist,Song))
+
+f = open(Song+".txt", 'w')
