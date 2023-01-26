@@ -39,14 +39,7 @@ def add_spaces(string):
             new_string += "\n\n"   
    return new_string
 
-#song = input("Song name: ")
-#artist = input("Artist: ")
-
-#findLyrics(artist+" "+song)
-
-
 Artist = input("Artist : ")
 Song = input("Song : ")
 
 print(findLyrics(Artist,Song))
-
