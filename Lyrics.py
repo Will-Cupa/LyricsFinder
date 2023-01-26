@@ -1,5 +1,6 @@
 import os
 import requests
+import fpdf
 from bs4 import BeautifulSoup
 
 os.environ['http_proxy'] = 'http://10.0.0.1:3128'
@@ -45,5 +46,4 @@ Song = input("Song : ")
 Lyrics = findLyrics(Artist,Song)
 
 f = open("ExportedLyrics/"+Song+".txt",'w')
-
 f.write(Lyrics)
