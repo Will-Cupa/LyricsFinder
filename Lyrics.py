@@ -3,16 +3,17 @@ import requests
 import fpdf
 from bs4 import BeautifulSoup
 
-os.environ['http_proxy'] = 'http://10.0.0.1:3128'
-os.environ['https_proxy'] = 'http://10.0.0.1:3128'
-
-
 def findLyrics(Artist:str, Song:str)->str:
    # Send an HTTP request to the website
    Song2 = Song.replace("  ", "-").replace(" ","-")
    Artist2 = Artist.replace("  ", "-").replace(" ","-")
    url = 'https://genius.com/' + Artist2 +"-"+ Song2 + "-lyrics"
-   response = requests.get(url)
+   try:
+      response = requests.get(url)
+   except:
+      os.environ['http_proxy'] = 'http://10.0.0.1:3128'
+      os.environ['https_proxy'] = 'http://10.0.0.1:3128'
+      response = requests.get(url)
 
    # Parse the HTML of the webpage
    soup = BeautifulSoup(response.text, 'html.parser')
@@ -24,7 +25,7 @@ def findLyrics(Artist:str, Song:str)->str:
    if lyrics_element is None:
       print("We're unable to find this song, please retry and make sure there's no name mistakes")
    else:
-      lyrics = Song + "\n" + lyrics_element.text
+      lyrics = Song + "\n\n" + lyrics_element.text
       return add_spaces(lyrics)
 
 def add_spaces(string):
