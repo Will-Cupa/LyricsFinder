@@ -1,6 +1,5 @@
 import os
 import requests
-import fpdf
 from bs4 import BeautifulSoup
 
 def findLyrics(Artist:str, Song:str)->str:
