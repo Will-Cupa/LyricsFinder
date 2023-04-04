@@ -15,14 +15,14 @@ def findLyrics(Artist:str, Song:str)->str:
       response = requests.get(url)
 
    # Parse the HTML of the webpage
-   soup = BeautifulSoup(response.text, 'html.parser')
+   soup = BeautifulSoup(response.content, 'html.parser')
 
    # Find the element that contains the lyrics
    lyrics_element = soup.find(class_="Lyrics__Container-sc-1ynbvzw-6 YYrds")
-   
+
    # Extract the text of the lyrics
    if lyrics_element is None:
-      print("We're unable to find this song, please retry and make sure there's no name mistakes")
+      print("We're unable to find this song, please retry and make sure there's no name mistake")
    else:
       lyrics = Song + "\n\n" + lyrics_element.text
       return add_spaces(lyrics)
@@ -40,10 +40,16 @@ def add_spaces(string):
             new_string += "\n\n"   
    return new_string
 
-Artist = input("Artist : ")
-Song = input("Song : ")
+Artist = ""
+Song = ""
+
+while Artist == "":
+   Artist = input("Artist : ")
+while Song == "":
+   Song = input("Song : ")
 
 Lyrics = findLyrics(Artist,Song)
 
-f = open("ExportedLyrics/"+Song+".txt",'w')
-f.write(Lyrics)
+if Lyrics is not None:
+   f = open("ExportedLyrics/"+Song+".txt",'w')
+   f.write(Lyrics)
