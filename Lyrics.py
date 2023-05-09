@@ -3,11 +3,11 @@ from os.path import basename
 import requests
 from bs4 import BeautifulSoup
 
-def findLyrics(Artist:str, Song:str)->str:
-   # Send an HTTP request to the website
-   Song2 = Song.replace("  ", "-").replace(" ","-")
-   Artist2 = Artist.replace("  ", "-").replace(" ","-")
-   url = 'https://genius.com/' + Artist2 +'-'+ Song2 + '-lyrics'
+def reachGeniusPage(Artist:str, Song:str):
+   #Make the url
+   url = validUrl(Artist,Song)
+
+   #try resquet with or without specific proxy 
    try:
       response = requests.get(url)
    except:
@@ -18,14 +18,15 @@ def findLyrics(Artist:str, Song:str)->str:
    # Parse the HTML of the webpage
    soup = BeautifulSoup(response.content, 'html.parser')
 
-   # Find the element that contains the lyrics and the album cover
-   lyrics_element = soup.find(class_="Lyrics__Container-sc-1ynbvzw-5 Dzxov")
-   img = soup.find(class_="SizedImage__NoScript-sc-1hyeaua-2 UJCmI")
+   #find the lyrics in the webpage
+   findLyrics(soup,Song)
+   findImage(soup,Song)
 
-   #Download the album cover
-   link  = img.get("src")
-   with open("ExportedLyrics/"+Song+".jpg", "wb") as f:
-            f.write(requests.get(link).content)
+
+def findLyrics(Content:str,Song:str)->str:
+
+   # Find the element that contains the lyrics
+   lyrics_element = Content.find(class_="Lyrics__Container-sc-1ynbvzw-5 Dzxov")
 
    # Extract the text of the lyrics if the song is found on Genius
    if lyrics_element is None:
@@ -33,8 +34,24 @@ def findLyrics(Artist:str, Song:str)->str:
    else:
       #add title
       lyrics = Song + "\n\n" + lyrics_element.text
-      #make layout for the doc
-      return layout(lyrics)
+
+      #make layout for the text
+      lyrics = layout(lyrics)
+
+      #create the document
+      f = open("ExportedLyrics/"+Song.replace(' ','_')+".txt",'w')
+      f.write(lyrics)
+
+
+def findImage(Content:str,Song:str)->str:
+   #Find the element that contain the album cover
+   img = Content.find(class_="SizedImage__NoScript-sc-1hyeaua-2 UJCmI")
+
+   #Download the album cover
+   if img is not None:
+      link  = img.get("src")
+      with open("ExportedLyrics/"+Song.replace(' ','_')+".jpg", "wb") as f:
+               f.write(requests.get(link).content)
 
 def layout(string):
    new_string = ""
@@ -49,9 +66,24 @@ def layout(string):
             new_string += "\n\n"   
    return new_string
 
-Lyrics = findLyrics("Eminem","rap God")
+def validUrl(Artist, Song):
+   rm = ["  "," "]
+   for elem in rm:
 
-"""
+      #remove writing mistakes
+      if Song[-1:] == elem:
+         Song = Song[:-1]
+      if Artist[-1:]  == elem:
+         Artist = Artist[:-1]
+
+      #replace space by "-" in order to make a valid url
+      Song = Song.replace(elem, "-")
+      Artist = Artist.replace(elem, "-")
+
+      #return the final url
+   return 'https://genius.com/' + Artist +'-'+ Song + '-lyrics'
+
+
 Artist = ""
 Song = ""
 
@@ -60,9 +92,5 @@ while Artist == "":
 while Song == "":
    Song = input("Song : ")
 
-Lyrics = findLyrics(Artist,Song)
-"""
+reachGeniusPage(Artist,Song)
 
-if Lyrics is not None:
-   f = open("ExportedLyrics/"+"rapGod"+".txt",'w')
-   f.write(Lyrics)
