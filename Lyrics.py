@@ -54,16 +54,29 @@ def findImage(Content:str,Song:str)->str:
                f.write(requests.get(link).content)
 
 def layout(string):
+   #Make a readable layout from the genius content
    new_string = ""
+   first_quote = False
    for i in range(len(string)):
-         if string[i].isupper() or string[i] == "[" and i > 0 :
-            if string[i-1].islower():
-               new_string += "\n"
+      if string[i] == '"':
+         if first_quote:
+            first_quote = False
+         else:
+            first_quote = True
+      elif string[i].isupper() or string[i] == "[" and i > 0:
+         if not string[i-1].isupper() and \
+            not (string[i-1] == "[" or string[i-1] == " "):
             if string[i] == "[":
+               new_string += "\n" 
+            if string[i-1] == '"':
+               if not first_quote:
+                  new_string += "\n"
+            else:
                new_string += "\n"
-         new_string += string[i]
-         if string[i] == "]" and string[i+1] != "[":
-            new_string += "\n\n"   
+               
+      new_string += string[i]
+      if string[i] == "]" and string[i+1] != "[":
+         new_string += "\n"   
    return new_string
 
 def validUrl(Artist, Song):
