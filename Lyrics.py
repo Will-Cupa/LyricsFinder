@@ -30,7 +30,17 @@ def findLyrics(Content:str,Song:str)->str:
 
    # Extract the text of the lyrics if the song is found on Genius
    if lyrics_element is None:
-      print("We're unable to find this song, please retry and make sure there's no name mistake")
+      print("\nWe're unable to find this song, please retry and make sure there's no name mistake\n")
+
+      #Restart the function
+      Artist = ""
+      Song = ""
+      while Artist == "":
+         Artist = input("Artist : ")
+      while Song == "":
+         Song = input("Song : ")
+
+      reachGeniusPage(Artist,Song)
    else:
       #add title
       lyrics = Song + "\n\n" + lyrics_element.text
