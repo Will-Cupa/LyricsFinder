@@ -2,6 +2,7 @@ import os
 from os.path import basename
 import requests
 from bs4 import BeautifulSoup
+import fpdf
 
 def reachGeniusPage(Artist:str, Song:str):
    #Make the url
@@ -67,6 +68,7 @@ def layout(string):
    #Make a readable layout from the genius content
    new_string = ""
    first_quote = False
+   chrIgnore=[" ", "[", "("]
    for i in range(len(string)):
       if string[i] == '"':
          if first_quote:
@@ -74,8 +76,7 @@ def layout(string):
          else:
             first_quote = True
       elif string[i].isupper() or string[i] == "[" and i > 0:
-         if not string[i-1].isupper() and \
-            not (string[i-1] == "[" or string[i-1] == " "):
+         if not string[i-1].isupper() and not string[i-1] in chrIgnore:
             if string[i] == "[":
                new_string += "\n" 
             if string[i-1] == '"':
