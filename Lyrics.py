@@ -51,7 +51,7 @@ def findLyrics(Content:str,Song:str)->str:
       lyrics = layout(lyrics)
 
       #create the document
-      f = open("ExportedLyrics/"+Song.replace(' ','_')+".txt",'w')
+      f = open("ExportedLyrics/"+Song.replace(' ','_')+".txt",'w', encoding="utf-8")
       f.write(lyrics)
 
 
