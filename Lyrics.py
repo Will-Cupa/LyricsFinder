@@ -2,7 +2,7 @@ import os
 from os.path import basename
 import requests
 from bs4 import BeautifulSoup
-import fpdf
+import re as regex
 
 def reachGeniusPage(Artist:str, Song:str):
    #Make the url
@@ -27,7 +27,8 @@ def reachGeniusPage(Artist:str, Song:str):
 def findLyrics(Content:str,Song:str)->str:
 
    # Find the element that contains the lyrics
-   lyrics_element = Content.find(class_="Lyrics__Container-sc-1ynbvzw-5 Dzxov")
+   # We use regular expression because the class name change over time
+   lyrics_element = Content.find(class_= regex.compile("Lyrics__Container*"))
 
    # Extract the text of the lyrics if the song is found on Genius
    if lyrics_element is None:
