@@ -114,6 +114,7 @@ retry = True
 while(retry):
    Artist = input("Artist : ")
    Song = input("Song : ")
+   
    print("")
    reachGeniusPage(Artist,Song)
    print("Done !\n")
