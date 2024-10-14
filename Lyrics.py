@@ -3,6 +3,7 @@ from os.path import basename
 import requests
 from bs4 import BeautifulSoup
 import re as regex
+import fpdf
 
 def reachGeniusPage(Artist:str, Song:str):
    #Make the url
@@ -107,6 +108,19 @@ def validUrl(Artist, Song):
    return 'https://genius.com/' + Artist +'-'+ Song + '-lyrics'
 
 
+def makePDF(content):
+   pdf = fpdf.FPDF()
+   pdf.addPage()
+
+   # set style and size of font 
+   # that you want in the pdf
+   pdf.set_font("Arial", size = 15)
+ 
+   # create a cell
+   pdf.cell(200, 10, txt = content, 
+         ln = 1, align = 'C')
+   
+
 Artist = ""
 Song = ""
 retry = True
@@ -114,7 +128,6 @@ retry = True
 while(retry):
    Artist = input("Artist : ")
    Song = input("Song : ")
-   
    print("")
    reachGeniusPage(Artist,Song)
    print("Done !\n")
