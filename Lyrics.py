@@ -7,13 +7,13 @@ import re as regex
 def reachGeniusPage(Artist:str, Song:str):
    #Make the url
    url = validUrl(Artist,Song)
-
    #try resquet with or without specific proxy 
    try:
       response = requests.get(url)
    except:
       os.environ['http_proxy'] = 'http://10.0.0.1:3128'
       os.environ['https_proxy'] = 'http://10.0.0.1:3128'
+      #add Proxy here
       response = requests.get(url)
 
    # Parse the HTML of the webpage
@@ -33,16 +33,7 @@ def findLyrics(Content:str,Song:str)->str:
    # Extract the text of the lyrics if the song is found on Genius
    if lyrics_element is None:
       print("\nWe're unable to find this song, please retry and make sure there's no name mistake\n")
-
-      #Restart the function
-      Artist = ""
-      Song = ""
-      while Artist == "":
-         Artist = input("Artist : ")
-      while Song == "":
-         Song = input("Song : ")
-
-      reachGeniusPage(Artist,Song)
+      
    else:
       #add title
       lyrics = Song + "\n\n" + lyrics_element.text
@@ -53,6 +44,8 @@ def findLyrics(Content:str,Song:str)->str:
       #create the document
       f = open("ExportedLyrics/"+Song.replace(' ','_')+".txt",'w', encoding="utf-8")
       f.write(lyrics)
+
+      print("Lyrics found")
 
 
 def findImage(Content:str,Song:str)->str:
@@ -65,7 +58,11 @@ def findImage(Content:str,Song:str)->str:
       with open("ExportedLyrics/"+Song.replace(' ','_')+".jpg", "wb") as f:
                f.write(requests.get(link).content)
 
+      print("Album cover found")
+
 def layout(string):
+   if (len(string) == 0):
+      raise("Error : lyrics are empty")
    #Make a readable layout from the genius content
    new_string = ""
    first_quote = False
@@ -87,8 +84,9 @@ def layout(string):
                new_string += "\n"
                
       new_string += string[i]
-      if string[i] == "]" and string[i+1] != "[":
-         new_string += "\n"   
+      if string[i] == "]" and i+1 < len(string): 
+         if string[i+1] != "[":
+            new_string += "\n"   
    return new_string
 
 def validUrl(Artist, Song):
@@ -111,11 +109,16 @@ def validUrl(Artist, Song):
 
 Artist = ""
 Song = ""
+retry = True
 
-while Artist == "":
+while(retry):
    Artist = input("Artist : ")
-while Song == "":
    Song = input("Song : ")
+   print("")
+   reachGeniusPage(Artist,Song)
+   print("Done !\n")
+   
+   retry = input("search another song ? (y/n)\n") == 'y'
 
-reachGeniusPage(Artist,Song)
+
 
