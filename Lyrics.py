@@ -13,7 +13,6 @@ def reachGeniusPage(Artist:str, Song:str):
       response = requests.get(url)
    except:
       os.environ['http_proxy'] = 'http://10.0.0.1:3128'
-      os.environ['https_proxy'] = 'http://10.0.0.1:3128'
       #add Proxy here
       response = requests.get(url)
 
